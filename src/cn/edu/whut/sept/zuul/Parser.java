@@ -2,17 +2,27 @@ package cn.edu.whut.sept.zuul;
 
 import java.util.Scanner;
 
+/**
+ * 这是游戏的解析器，对用户输入的命令进行解析执行
+ */
 public class Parser
 {
     private CommandWords commands;
     private Scanner reader;
 
+    /**
+     * 构造函数，新建命令单词对象和输入扫描器对象
+     */
     public Parser()
     {
         commands = new CommandWords();
         reader = new Scanner(System.in);
     }
 
+    /**
+     * 根据输入取出两条指令
+     * @return
+     */
     public Command getCommand()
     {
         String inputLine;
@@ -39,6 +49,9 @@ public class Parser
         }
     }
 
+    /**
+     * 展示命令
+     */
     public void showCommands()
     {
         commands.showAll();

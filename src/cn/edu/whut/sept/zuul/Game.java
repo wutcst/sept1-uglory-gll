@@ -16,8 +16,9 @@ package cn.edu.whut.sept.zuul;
 public class Game
 {
     private Parser parser;
-    private Room currentRoom;
-
+//    private Room currentRoom;
+    public Room[] order = new Room[1000];
+    public int temp = 0;
     /**
      * 创建游戏并初始化内部数据和解析器.
      */
@@ -35,11 +36,11 @@ public class Game
         Room outside, theater, pub, lab, office;
 
         // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
+        outside = new Room("outside the main entrance of the university","box","this is a big box",50);
+        theater = new Room("in a lecture theater","chair","this is a chair",30);
+        pub = new Room("in the campus pub","desk","this is a desk",60);
+        lab = new Room("in a computing lab","TV","this is a TV",50);
+        office = new Room("in the computing admin office","blackboard","this is a blackboard",35);
 
         // initialise room exits
         outside.setExit("east", theater);
@@ -55,7 +56,7 @@ public class Game
 
         office.setExit("west", lab);
 
-        currentRoom = outside;  // start game outside
+        order[temp] = outside;  // start game outside
     }
 
     /**
@@ -86,7 +87,7 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(order[temp].getLongDescription());
     }
 
     /**
@@ -104,16 +105,37 @@ public class Game
         }
 
         String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
-            printHelp();
+        switch(commandWord){
+            case "help":
+                printHelp();
+                break;
+            case "go":
+                goRoom(command);
+                break;
+            case "quit":
+                wantToQuit = quit(command);
+                break;
+            case "look":
+                order[temp].look();
+                break;
+            case "back":
+                temp--;
+                System.out.println(order[temp].getLongDescription());
+                break;
         }
-        else if (commandWord.equals("go")) {
-            goRoom(command);
-        }
-        else if (commandWord.equals("quit")) {
-            wantToQuit = quit(command);
-        }
-        // else command not recognised.
+//        if (commandWord.equals("help")) {
+//            printHelp();
+//        }
+//        else if (commandWord.equals("go")) {
+//            goRoom(command);
+//        }
+//        else if (commandWord.equals("quit")) {
+//            wantToQuit = quit(command);
+//        }
+//        else if(commandWord.equals("look")){
+//            currentRoom.look();
+//        }
+//         else command not recognised.
         return wantToQuit;
     }
 
@@ -147,14 +169,14 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = order[temp].getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            order[++temp] = nextRoom;
+            System.out.println(order[temp].getLongDescription());
         }
     }
 
